@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Poll — ADA Sheffield</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Live Poll</h1>
+            <p class="site-subtitle">ADA Sheffield — Cloud Computing Session</p>
+            <div id="backend-badge" class="backend-badge hidden" aria-live="polite"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="error-banner" class="error-banner hidden" role="alert" aria-live="polite"></div>
+        <section id="polls-container" class="polls-grid" aria-label="Available polls"></section>
+        <div id="empty-state" class="empty-state hidden">
+            <p>No polls are open yet — check back soon</p>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 ADA Sheffield &middot; Cloud Computing L100</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

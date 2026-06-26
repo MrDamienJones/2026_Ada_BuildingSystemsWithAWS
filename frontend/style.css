@@ -1,0 +1,451 @@
+/* ===== CSS Variables & Reset ===== */
+:root {
+    --color-primary: #0f766e;
+    --color-primary-light: #14b8a6;
+    --color-primary-dark: #0d5c56;
+    --color-accent: #0ea5e9;
+    --color-bg: #f8fafc;
+    --color-surface: #ffffff;
+    --color-text: #1e293b;
+    --color-text-muted: #64748b;
+    --color-border: #e2e8f0;
+    --color-error-bg: #fef2f2;
+    --color-error-text: #991b1b;
+    --color-error-border: #fecaca;
+    --color-success: #16a34a;
+    --color-bar: #0f766e;
+    --color-bar-bg: #e2e8f0;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --transition: 0.2s ease;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-stack);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Layout ===== */
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* ===== Header ===== */
+.site-header {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff;
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+.site-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.site-subtitle {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-top: 0.25rem;
+}
+
+/* ===== Backend Badge ===== */
+.backend-badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #fff;
+    border-radius: 100px;
+    background-color: #64748b;
+}
+
+/* ===== Main Content ===== */
+main.container {
+    flex: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+/* ===== Error Banner ===== */
+.error-banner {
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: var(--color-error-text);
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+}
+
+/* ===== Polls Grid ===== */
+.polls-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+/* Multi-column on wider viewports */
+@media (min-width: 768px) {
+    .polls-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ===== Poll Card ===== */
+.poll-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: box-shadow var(--transition);
+}
+
+.poll-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.poll-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+/* ===== Option Buttons ===== */
+.poll-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.option-btn {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    font-family: var(--font-stack);
+    background: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+    text-align: left;
+    width: 100%;
+}
+
+.option-btn:hover:not(:disabled) {
+    border-color: var(--color-primary-light);
+    background: #f0fdfa;
+}
+
+.option-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.option-btn:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+
+.option-btn.selected {
+    border-color: var(--color-primary);
+    background: #ccfbf1;
+    font-weight: 600;
+}
+
+.option-btn.selected::before {
+    content: "✓ ";
+    color: var(--color-primary);
+}
+
+/* ===== Results (Bar Chart) ===== */
+.poll-results {
+    margin-top: 1rem;
+}
+
+.result-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.625rem;
+}
+
+.result-label {
+    flex: 0 0 100px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.result-bar-container {
+    flex: 1;
+    background: var(--color-bar-bg);
+    border-radius: 4px;
+    height: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-bar {
+    background: var(--color-bar);
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    min-width: 0;
+}
+
+.result-bar.highlight {
+    background: var(--color-primary-light);
+}
+
+.result-stats {
+    flex: 0 0 80px;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* ===== Vote Error (inline) ===== */
+.vote-error {
+    color: var(--color-error-text);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* ===== Footer ===== */
+.site-footer {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 1rem 0;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+}
+
+/* ===== Accessibility: Focus Visible ===== */
+.option-btn:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* ===== Presenter Controls ===== */
+.access-denied {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-error-text);
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    border-radius: var(--radius);
+    margin-top: 1.5rem;
+}
+
+.access-denied p {
+    margin-bottom: 0.5rem;
+}
+
+.access-denied-hint {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.access-denied-hint code {
+    background: var(--color-bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.polls-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.presenter-poll-row {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    transition: box-shadow var(--transition);
+}
+
+.presenter-poll-row:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.presenter-poll-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.presenter-poll-question {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.presenter-poll-status {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.presenter-poll-status.status-visible {
+    color: var(--color-success);
+}
+
+.presenter-poll-status.status-hidden {
+    color: var(--color-text-muted);
+}
+
+.presenter-poll-votes {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.presenter-toggle-btn {
+    min-height: 44px;
+    min-width: 80px;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: var(--font-stack);
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    white-space: nowrap;
+}
+
+.presenter-toggle-btn:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.presenter-toggle-btn:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.presenter-toggle-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Show button — green, indicating it will make the poll visible */
+.presenter-toggle-btn.toggle-show {
+    background: var(--color-success);
+    color: #fff;
+    border-color: var(--color-success);
+}
+
+.presenter-toggle-btn.toggle-show:hover:not(:disabled) {
+    background: #15803d;
+    border-color: #15803d;
+}
+
+/* Hide button — grey, indicating it will hide the poll */
+.presenter-toggle-btn.toggle-hide {
+    background: #6b7280;
+    color: #fff;
+    border-color: #6b7280;
+}
+
+.presenter-toggle-btn.toggle-hide:hover:not(:disabled) {
+    background: #4b5563;
+    border-color: #4b5563;
+}
+
+.presenter-row-error {
+    width: 100%;
+    color: var(--color-error-text);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== Responsive tweaks ===== */
+@media (max-width: 480px) {
+    .site-title {
+        font-size: 1.4rem;
+    }
+
+    .poll-card {
+        padding: 1.25rem;
+    }
+
+    .result-label {
+        flex: 0 0 70px;
+        font-size: 0.8rem;
+    }
+
+    .result-stats {
+        flex: 0 0 60px;
+        font-size: 0.75rem;
+    }
+
+    .presenter-poll-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .presenter-toggle-btn {
+        width: 100%;
+    }
+}

@@ -1,0 +1,12 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+boto3==1.35.0
+pydantic==2.9.0
+pydantic-settings==2.5.2
+mangum==0.18.0
+hypothesis==6.112.0
+pytest==8.3.3
+aws-cdk-lib==2.260.0
+constructs==10.6.0
+pre-commit==4.2.0
+ruff==0.6.8

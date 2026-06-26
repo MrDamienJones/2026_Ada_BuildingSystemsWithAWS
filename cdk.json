@@ -1,0 +1,6 @@
+{
+  "app": ".venv\\Scripts\\python.exe cdk/app.py",
+  "context": {
+    "@aws-cdk/core:stackRelativeExports": true
+  }
+}

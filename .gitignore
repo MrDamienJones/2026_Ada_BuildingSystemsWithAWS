@@ -1,0 +1,41 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Testing
+.hypothesis/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# CDK
+cdk.out/
+cdk.context.json
+
+# IDE / Editor
+.vscode/
+.kiro/
+.idea/
+
+# Environment & secrets
+.env
+.env.*
+cdk/cdk_config.py
+
+# Node (frontend)
+node_modules/
+
+# Frontend config (auto-generated at deploy time)
+frontend/config.js
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Internal docs (not for public)
+brief.txt

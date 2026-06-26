@@ -1,0 +1,14 @@
+# CDK asset ignore file — prevents scanning of large directories during synth
+.venv
+.git
+.kiro
+.hypothesis
+.pytest_cache
+__pycache__
+cdk
+cdk.out
+tests
+frontend
+*.pyc
+node_modules
+.vscode

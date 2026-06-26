@@ -1,0 +1,26 @@
+# Ruff configuration for the Live Poll App
+target-version = "py311"
+line-length = 100
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "S",    # flake8-bandit (security)
+]
+ignore = [
+    "S101",  # allow assert in tests
+    "S104",  # allow binding to 0.0.0.0 (needed for containers)
+]
+
+[lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S106"]
+"seed_db.py" = ["S106"]
+"cdk/frontend_stack.py" = ["E501"]
+
+[format]
+quote-style = "double"

@@ -1,0 +1,99 @@
+[
+  {
+    "poll_id": "fav-lang",
+    "question": "What is your favourite programming language?",
+    "options": [
+      { "option_id": "python", "label": "Python", "order": 1 },
+      { "option_id": "javascript", "label": "JavaScript", "order": 2 },
+      { "option_id": "java", "label": "Java", "order": 3 },
+      { "option_id": "csharp", "label": "C#", "order": 4 },
+      { "option_id": "other", "label": "Other", "order": 5 }
+    ]
+  },
+  {
+    "poll_id": "pineapple-pizza",
+    "question": "Does pineapple belong on pizza?",
+    "options": [
+      { "option_id": "yes", "label": "Yes!", "order": 1 },
+      { "option_id": "no", "label": "No!", "order": 2 },
+      { "option_id": "sometimes", "label": "Sometimes", "order": 3 }
+    ]
+  },
+  {
+    "poll_id": "coffee-vs-tea",
+    "question": "Coffee or tea?",
+    "options": [
+      { "option_id": "coffee", "label": "Coffee", "order": 1 },
+      { "option_id": "tea", "label": "Tea", "order": 2 },
+      { "option_id": "both", "label": "Both!", "order": 3 },
+      { "option_id": "neither", "label": "Neither", "order": 4 }
+    ]
+  },
+  {
+    "poll_id": "sheffield-celeb",
+    "question": "Most famous person from Sheffield?",
+    "options": [
+      { "option_id": "arctic-monkeys", "label": "Arctic Monkeys", "order": 1 },
+      { "option_id": "sean-bean", "label": "Sean Bean", "order": 2 },
+      { "option_id": "jessica-ennis", "label": "Jessica Ennis-Hill", "order": 3 },
+      { "option_id": "michael-palin", "label": "Michael Palin", "order": 4 }
+    ]
+  },
+  {
+    "poll_id": "cats-vs-dogs",
+    "question": "Cats or dogs?",
+    "options": [
+      { "option_id": "cats", "label": "Cats", "order": 1 },
+      { "option_id": "dogs", "label": "Dogs", "order": 2 },
+      { "option_id": "both", "label": "Both!", "order": 3 },
+      { "option_id": "neither", "label": "Neither", "order": 4 }
+    ]
+  },
+  {
+    "poll_id": "sheffield-food",
+    "question": "Best Sheffield food?",
+    "options": [
+      { "option_id": "hendersons", "label": "Henderson's Relish", "order": 1 },
+      { "option_id": "chip-butty", "label": "Chip butty", "order": 2 },
+      { "option_id": "curry", "label": "A curry", "order": 3 },
+      { "option_id": "wards", "label": "A pub pie", "order": 4 }
+    ]
+  },
+  {
+    "poll_id": "remote-vs-office",
+    "question": "Remote, office, or hybrid?",
+    "options": [
+      { "option_id": "remote", "label": "Fully remote", "order": 1 },
+      { "option_id": "office", "label": "In office", "order": 2 },
+      { "option_id": "hybrid", "label": "Hybrid", "order": 3 }
+    ]
+  },
+  {
+    "poll_id": "early-bird-night-owl",
+    "question": "Early bird or night owl?",
+    "options": [
+      { "option_id": "early-bird", "label": "Early bird", "order": 1 },
+      { "option_id": "night-owl", "label": "Night owl", "order": 2 },
+      { "option_id": "depends", "label": "Depends", "order": 3 }
+    ]
+  },
+  {
+    "poll_id": "os-preference",
+    "question": "Preferred operating system?",
+    "options": [
+      { "option_id": "windows", "label": "Windows", "order": 1 },
+      { "option_id": "macos", "label": "macOS", "order": 2 },
+      { "option_id": "linux", "label": "Linux", "order": 3 }
+    ]
+  },
+  {
+    "poll_id": "best-sheffield",
+    "question": "Best place in Sheffield?",
+    "options": [
+      { "option_id": "peace-gardens", "label": "Peace Gardens", "order": 1 },
+      { "option_id": "peak-district", "label": "Peak District", "order": 2 },
+      { "option_id": "meadowhall", "label": "Meadowhall", "order": 3 },
+      { "option_id": "kelham-island", "label": "Kelham Island", "order": 4 }
+    ]
+  }
+]
