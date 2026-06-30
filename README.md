@@ -6,6 +6,7 @@ A real-time audience-voting web application for a 2-hour L100 teaching session a
 
 ## Table of Contents
 
+- [AWS Services Used](#aws-services-used)
 - [Prerequisites](#prerequisites)
 - [Quick Start — Deployment](#quick-start--deployment)
 - [Switching Backends](#switching-backends)
@@ -18,6 +19,28 @@ A real-time audience-voting web application for a 2-hour L100 teaching session a
 - [Environment Variables](#environment-variables)
 - [Compute Tradeoffs — EC2 vs ECS vs Lambda](#compute-tradeoffs--ec2-vs-ecs-vs-lambda)
 - [Session Reference Links](#session-reference-links)
+
+---
+
+## AWS Services Used
+
+| AWS Service | What It Does | Role in This Project |
+|-------------|--------------|----------------------|
+| **Amazon EC2** | Virtual machines in the cloud | Hosts the FastAPI backend on t3.micro instances behind an Auto Scaling Group — demonstrates the traditional compute model |
+| **Elastic Load Balancing (ALB)** | Distributes incoming traffic across multiple targets | Provides a stable HTTP endpoint in front of EC2 and ECS instances; performs health checks |
+| **Auto Scaling** | Automatically adjusts compute capacity | Scales EC2 instances between 1–3 based on demand |
+| **Amazon ECS (Fargate)** | Run containers without managing servers | Hosts the same FastAPI backend as a Docker container — demonstrates the container compute model |
+| **Amazon ECR** | Private Docker container registry | Stores the Docker image built by CDK for the ECS Fargate task |
+| **AWS Lambda** | Run code without provisioning servers | Hosts the FastAPI backend (via Mangum) and WebSocket handler — demonstrates the serverless compute model |
+| **Amazon API Gateway (REST)** | Managed REST API endpoint | Routes HTTP requests to the REST Lambda function with a proxy integration |
+| **Amazon API Gateway (WebSocket)** | Managed WebSocket API endpoint | Handles real-time connections ($connect/$disconnect/$default) for live vote broadcasting |
+| **Amazon DynamoDB** | Serverless NoSQL database | Stores poll questions, vote tallies, and WebSocket connection state (shared across all three compute stacks) |
+| **Amazon S3** | Object storage | Hosts the static frontend files (HTML/CSS/JS) and stores the EC2 application code asset |
+| **Amazon CloudFront** | Content delivery network (CDN) | Serves the frontend over HTTPS globally; proxies EC2/ECS API calls to avoid mixed-content issues |
+| **AWS Systems Manager (SSM)** | Parameter store and instance management | Stores backend URLs so the FrontendStack can generate `config.js` at deploy time; enables Session Manager on EC2 |
+| **AWS IAM** | Identity and access management | Grants each compute stack least-privilege DynamoDB access; defines service roles for EC2, ECS, and Lambda |
+| **AWS CloudFormation** | Infrastructure as code deployment engine | Underlying service that CDK synthesises templates for; manages stack creation, updates, and deletion |
+| **AWS CDK (Cloud Development Kit)** | High-level IaC framework (Python) | Defines all infrastructure in Python; synthesises to CloudFormation and handles asset bundling/deployment |
 
 ---
 
