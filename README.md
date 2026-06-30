@@ -178,9 +178,9 @@ https://<CLOUDFRONT>/presenter.html?key=YOUR_SECRET_KEY&backend=ec2
 
 ---
 
-## Running Locally
+## Development
 
-### Start the backend
+### Running locally
 
 ```bash
 uvicorn app.main:app --port 8000
@@ -188,13 +188,58 @@ uvicorn app.main:app --port 8000
 
 **Expected outcome:** Server starts at `http://localhost:8000`. Requires a local DynamoDB instance or AWS credentials configured for a remote table.
 
-### Open the frontend
-
 Open `frontend/index.html` directly in a browser. The default `window.API_URL` is already set to `http://localhost:8000`.
 
-### Access the presenter page
+To access the presenter page, open `frontend/presenter.html?key=YOUR_SECRET_KEY` in a browser (use the `PRESENTER_SECRET_KEY` value from your `cdk/cdk_config.py`).
 
-Open `frontend/presenter.html?key=YOUR_SECRET_KEY` in a browser (use the `PRESENTER_SECRET_KEY` value from your `cdk/cdk_config.py`).
+### Pre-commit hooks
+
+This project uses [pre-commit](https://pre-commit.com/) to run automated checks before every commit. This catches common issues (formatting, secrets, broken YAML) before they reach the repository.
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+After running `pre-commit install`, the hooks will run automatically on every `git commit`. You only need to do this once per clone.
+
+| Hook | Source | Purpose |
+|------|--------|---------|
+| `trailing-whitespace` | pre-commit-hooks | Strips trailing whitespace from all files |
+| `end-of-file-fixer` | pre-commit-hooks | Ensures files end with a single newline |
+| `check-yaml` | pre-commit-hooks | Validates YAML syntax |
+| `check-json` | pre-commit-hooks | Validates JSON syntax |
+| `check-added-large-files` | pre-commit-hooks | Blocks files over 500 KB (prevents accidental binary commits) |
+| `detect-private-key` | pre-commit-hooks | Catches accidentally committed private keys |
+| `check-merge-conflict` | pre-commit-hooks | Flags unresolved merge conflict markers |
+| `ruff` | ruff-pre-commit | Lints Python code and auto-fixes issues |
+| `ruff-format` | ruff-pre-commit | Formats Python code (Black-compatible) |
+| `detect-secrets` | Yelp/detect-secrets | Scans for hardcoded secrets, tokens, and passwords |
+
+The `detect-secrets` and `detect-private-key` hooks are particularly important — they act as a safety net preventing AWS credentials, API keys, or the presenter secret from being accidentally committed. Combined with the `.gitignore` rules, this gives two layers of protection against sensitive data leaking into version control.
+
+To run all hooks against every file (not just staged changes):
+
+```bash
+pre-commit run --all-files
+```
+
+To update hooks to their latest versions:
+
+```bash
+pre-commit autoupdate
+```
+
+### Useful commands
+
+| Command | Description |
+|---------|-------------|
+| `cdk synth` | Generate CloudFormation templates without deploying |
+| `cdk diff EC2Stack` | Preview changes before deploying a stack |
+| `cdk list` | List all defined stacks |
+| `pytest tests/` | Run all tests (unit + property-based) |
+| `pytest tests/unit/` | Run unit and property-based tests only |
+| `pre-commit run --all-files` | Run all pre-commit hooks against the entire repo |
 
 ---
 
@@ -298,12 +343,91 @@ adasheffield/
 
 ---
 
-## Useful Commands
+## Compute Tradeoffs — EC2 vs ECS vs Lambda
 
-| Command | Description |
-|---------|-------------|
-| `cdk synth` | Generate CloudFormation templates without deploying |
-| `cdk diff EC2Stack` | Preview changes before deploying a stack |
-| `cdk list` | List all defined stacks |
-| `pytest tests/` | Run all tests (unit + property-based) |
-| `pytest tests/unit/` | Run unit and property-based tests only |
+This session uses three AWS compute models to host the same FastAPI backend. Each represents a different point on the control-versus-convenience spectrum, and none of them is universally "best" — it's all about tradeoffs.
+
+### Cost Comparison
+
+| Service | Approx. Monthly Cost (light usage) | What You're Paying For |
+|---------|-------------------------------------|------------------------|
+| Lambda | ~£0–2 | Per-invocation only; free tier covers 1M requests |
+| EC2 + ALB | ~£24–30 | ALB (~£16) + t3.micro (~£8) running 24/7 |
+| ECS Fargate + ALB | ~£30–40 | ALB (~£16) + Fargate vCPU/memory (~£14–24) 24/7 |
+
+ECS Fargate is the most expensive of the three implementations. The premium comes from AWS managing the underlying instances for you — you never need to SSH into a host, never patch a kernel, never worry about capacity planning at the VM level.
+
+EC2 is still the right fit if you need full OS access or custom networking, have legacy apps that can't be containerised, or use existing tooling built around SSH/Ansible.
+
+### EC2 — The Virtual Machine
+
+| | |
+|---|---|
+| ✅ Full control over the OS, runtime, and networking | ❌ You patch the OS, manage security groups, configure firewalls |
+| ✅ Easiest mental model — it's just a virtual machine | ❌ Always running — paying 24/7 whether anyone is using the app or not |
+| ✅ Portable between cloud providers (any VM host works the same way) | |
+
+EC2 gives you the most control but the most responsibility.
+
+### ECS Fargate — The Container
+
+| | |
+|---|---|
+| ✅ No OS patching — AWS manages the host underneath | ❌ More abstraction layers to understand (tasks, services, clusters, target groups) |
+| ✅ Scales horizontally by adding more containers | ❌ Still "always on" unless you configure scale-to-zero (which isn't straightforward) |
+| ✅ Container image is portable — runs the same on your laptop as in AWS | ❌ Slower deployments — rolling out a new container image takes 2–5 minutes |
+
+Docker-related safety measures (image scanning, read-only filesystems, non-root users) take longer to configure up front, but the resulting container stands up to more scrutiny than a bare EC2 instance with a script-based deploy.
+
+### Lambda — The Function
+
+| | |
+|---|---|
+| ✅ Cheapest at low/moderate traffic — free tier covers 1M requests/month | ❌ Hard limits: 15-min max execution, 10 GB memory, 6 MB response payload |
+| ✅ Pay only when code executes (true pay-per-use) | ❌ Architecturally bound to AWS (not portable without significant rework) |
+| ✅ AWS manages everything: scaling, patching, availability | ❌ Harder to test locally |
+| ✅ Scales to hundreds of concurrent executions automatically | |
+
+Lambda shifts almost all operational responsibility to AWS. The tradeoff is flexibility — you accept hard runtime limits and tight coupling to the AWS ecosystem.
+
+### The Pattern
+
+As you move from EC2 → ECS → Lambda:
+
+- **You give up control** — less access to the OS, fewer knobs to turn
+- **You gain convenience** — less patching, less capacity planning, less ops burden
+- **The responsibility boundary shifts** — more of the Shared Responsibility Model falls on AWS's side
+- **Portability decreases** — EC2 workloads move easily between clouds; Lambda functions are deeply AWS-native
+
+There is no single right answer. The choice depends on the workload, the team's skills, the budget, and how much operational overhead you're willing to accept.
+
+---
+
+## Session Reference Links
+
+The following AWS resources were used during the live session to support key teaching points about the scale, breadth, and responsibility model of cloud computing.
+
+### Scale of AWS
+
+- **[AWS Service Health Dashboard](https://health.aws.amazon.com/health/status)** — Used to demonstrate the number of AWS services via the volume of pages listed on the status dashboard. Gives learners an immediate visual sense of how large the platform is.
+
+### Global Infrastructure
+
+- **[AWS Regions & Availability Zones](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)** — Used to show the worldwide distribution of AWS Regions, Availability Zones, and Edge Locations. Reinforces that AWS operates physical infrastructure across the globe, not just "somewhere in the cloud."
+
+### AWS Service Categories
+
+These pages were used to show specific AWS services grouped by function, illustrating that each service solves a particular problem:
+
+| Link | Category | Page Format |
+|------|----------|-------------|
+| [AWS Compute Services](https://aws.amazon.com/products/compute/) | Compute | Table |
+| [AWS Storage Services](https://aws.amazon.com/products/storage/) | Storage | Cards |
+| [AWS Database Services](https://aws.amazon.com/products/databases/) | Databases | Table |
+| [AWS AI/ML Services](https://aws.amazon.com/ai/services/) | AI & Machine Learning | Cards |
+
+Each page demonstrates how AWS offers purpose-built services rather than one-size-fits-all solutions — learners can see the variety of options available within a single domain.
+
+### Shared Responsibility Model
+
+- **[AWS Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)** — Used to show where the boundary lies between what AWS manages (security *of* the cloud) and what the customer manages (security *in* the cloud). This directly ties into the session's comparison of EC2, ECS, and Lambda — as you move from EC2 to Lambda, more responsibility shifts to AWS.
