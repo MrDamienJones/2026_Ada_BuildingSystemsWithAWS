@@ -4,6 +4,23 @@ A real-time audience-voting web application for a 2-hour L100 teaching session a
 
 ---
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Quick Start — Deployment](#quick-start--deployment)
+- [Switching Backends](#switching-backends)
+- [Development](#development)
+  - [Running locally](#running-locally)
+  - [Pre-commit hooks](#pre-commit-hooks)
+  - [Useful commands](#useful-commands)
+- [Tear Down](#tear-down)
+- [Project Structure](#project-structure)
+- [Environment Variables](#environment-variables)
+- [Compute Tradeoffs — EC2 vs ECS vs Lambda](#compute-tradeoffs--ec2-vs-ecs-vs-lambda)
+- [Session Reference Links](#session-reference-links)
+
+---
+
 ## Prerequisites
 
 | Tool | Version | Purpose |
